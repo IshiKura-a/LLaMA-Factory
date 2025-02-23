@@ -91,6 +91,9 @@ def add_z3_leaf_module(model: "PreTrainedModel") -> None:
         from transformers.models.qwen2_moe.modeling_qwen2_moe import Qwen2MoeSparseMoeBlock
 
         _set_z3_leaf_modules(model, [Qwen2MoeSparseMoeBlock])
+    
+    if model_type == "deepseek_v3":
+        _set_z3_leaf_modules(model, [model.model.layers[0].mlp.__class__])
 
     if model_type == "qwen3_moe":
         from transformers.models.qwen3_moe.modeling_qwen3_moe import Qwen3MoeSparseMoeBlock
