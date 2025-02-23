@@ -1,0 +1,27 @@
+allow-other: false
+logging:
+    type: syslog
+libfuse:
+    attribute-expiration-sec: 240
+    entry-expiration-sec: 240
+    negative-entry-expiration-sec: 120
+file_cache:
+    path: /mnt/azcache/zh
+    timeout-sec: 120
+azstorage:
+    account-name: xiaoliuinterns # TO BE FILLED
+    endpoint: https://xiaoliuinterns.blob.core.windows.net  # TO BE FILLED
+    container: zihao-tang  # TO BE FILLED
+    mode: sas
+    sas: [sas]
+    update-md5: false
+    validate-md5: false
+    virtual-directory: true
+    max-results-for-list: 0
+    disable-compression: false
+    telemetry: ""
+    honour-acl: false
+components:
+    - libfuse
+    - file_cache
+    - azstorage
