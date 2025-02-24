@@ -1,4 +1,32 @@
 {
+  "eem_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/eem_ds_train.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "completion"
+    }
+  },
+  "eem_test": {
+    "file_name": "/mnt/zh/dataset/ads_sft/eem_ds_test.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "completion"
+    }
+  },
+  "epm_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/epm_ds_train.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "completion"
+    }
+  },
+  "epm_test": {
+    "file_name": "/mnt/zh/dataset/ads_sft/epm_ds_test.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "completion"
+    }
+  },
   "identity": {
     "file_name": "identity.json"
   },
