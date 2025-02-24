@@ -8,7 +8,7 @@ do_train: true
 finetuning_type: lora
 lora_rank: 8
 lora_target: all
-deepspeed: examples/deepspeed/ds_z3_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
+deepspeed: examples/deepspeed/ds_z3_offload_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
 
 ### dataset
 dataset: eem_train,epm_train
