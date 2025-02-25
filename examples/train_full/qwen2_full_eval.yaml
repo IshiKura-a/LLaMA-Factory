@@ -15,4 +15,4 @@ n_shot: 5
 save_dir: saves/qwen2-7b/eval
 
 ### eval
-batch_size: 4
+batch_size: 64
