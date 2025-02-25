@@ -177,4 +177,5 @@ wandb/
 swanlog/
 generated_predictions.jsonl
 
-job.yaml
+job*.yaml
+launch.py
