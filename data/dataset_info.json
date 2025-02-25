@@ -1,30 +1,34 @@
 {
   "eem_train": {
-    "file_name": "/mnt/zh/dataset/ads_sft/eem_ds_train.jsonl",
+    "file_name": "/mnt/zh/dataset/ads_sft/eem_ds_train_cleaned.jsonl",
     "columns": {
       "prompt": "prompt",
-      "response": "completion"
+      "response": "response",
+      "system": "system"
     }
   },
   "eem_test": {
-    "file_name": "/mnt/zh/dataset/ads_sft/eem_ds_test.jsonl",
+    "file_name": "/mnt/zh/dataset/ads_sft/eem_ds_test_cleaned.jsonl",
     "columns": {
       "prompt": "prompt",
-      "response": "completion"
+      "response": "response",
+      "system": "system"
     }
   },
   "epm_train": {
-    "file_name": "/mnt/zh/dataset/ads_sft/epm_ds_train.jsonl",
+    "file_name": "/mnt/zh/dataset/ads_sft/epm_ds_train_cleaned.jsonl",
     "columns": {
       "prompt": "prompt",
-      "response": "completion"
+      "response": "response",
+      "system": "system"
     }
   },
   "epm_test": {
-    "file_name": "/mnt/zh/dataset/ads_sft/epm_ds_test.jsonl",
+    "file_name": "/mnt/zh/dataset/ads_sft/epm_ds_test_cleaned.jsonl",
     "columns": {
       "prompt": "prompt",
-      "response": "completion"
+      "response": "response",
+      "system": "system"
     }
   },
   "identity": {
