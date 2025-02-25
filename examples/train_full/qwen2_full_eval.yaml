@@ -1,0 +1,18 @@
+### model
+model_name_or_path: /zh/models/Qwen2-7B-Instruct
+trust_remote_code: true
+
+### method
+finetuning_type: full
+
+### dataset
+task: mmlu_test  # choices: [mmlu_test, ceval_validation, cmmlu_test]
+template: fewshot
+lang: en
+n_shot: 5
+
+### output
+save_dir: saves/qwen2-7b/eval
+
+### eval
+batch_size: 4
