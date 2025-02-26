@@ -11,11 +11,11 @@ lora_target: all
 deepspeed: examples/deepspeed/ds_z3_offload_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
 
 ### dataset
-dataset: eem_train
-eval_dataset: eem_test
+dataset: qac_train
+eval_dataset: qac_test
 template: deepseek3
-cutoff_len: 2100
-max_samples: 1000
+cutoff_len: 4096
+max_samples: 500
 overwrite_cache: true
 preprocessing_num_workers: 16
 

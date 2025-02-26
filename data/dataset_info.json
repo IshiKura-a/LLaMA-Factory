@@ -1,4 +1,18 @@
 {
+  "qac_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/train.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
+  "qac_test": {
+    "file_name": "/mnt/zh/dataset/ads_sft/test.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
   "eem_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/eem_ds_train_cleaned.jsonl",
     "columns": {
