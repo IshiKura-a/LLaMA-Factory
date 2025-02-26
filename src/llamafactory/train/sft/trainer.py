@@ -17,29 +17,40 @@
 
 import json
 import os
+import time
 from types import MethodType
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, Optional, Union
+from tqdm import tqdm, trange
 
 import numpy as np
 import torch
 from transformers import Seq2SeqTrainer
 from typing_extensions import override
+from datasets import load_dataset
+
+from llamafactory.hparams.data_args import DataArguments
 
 from ...extras import logging
+from ...data import get_template_and_fix_tokenizer
+from ...model import load_tokenizer
+from ...extras.constants import CHOICES, SUBJECTS
 from ...extras.constants import IGNORE_INDEX
 from ...extras.packages import is_transformers_version_greater_than
+from ...eval.template import get_eval_template
 from ..callbacks import SaveProcessorCallback
 from ..trainer_utils import create_custom_optimizer, create_custom_scheduler
 
+from transformers.utils import cached_file
+from transformers.trainer_utils import EvalLoopOutput
 
 if TYPE_CHECKING:
     from torch.utils.data import Dataset
     from transformers import PreTrainedTokenizer, ProcessorMixin
     from transformers.trainer import PredictionOutput
 
-    from ...hparams import FinetuningArguments
-
-
+    from ...hparams import FinetuningArguments, EvaluationArguments, ModelArguments
+    from numpy.typing import NDArray
+    
 logger = logging.get_logger(__name__)
 
 
@@ -154,3 +165,180 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
         with open(output_prediction_file, "w", encoding="utf-8") as f:
             for text, pred, label in zip(decoded_inputs, decoded_preds, decoded_labels):
                 f.write(json.dumps({"prompt": text, "predict": pred, "label": label}, ensure_ascii=False) + "\n")
+
+
+class Seq2SeqTrainerWithBenchmark(CustomSeq2SeqTrainer):
+    def __init__(
+        self,
+        finetuning_args: "FinetuningArguments",
+        processor: Optional["ProcessorMixin"],
+        gen_kwargs: Optional[Dict[str, Any]] = None,
+        eval_args: "EvaluationArguments" = None,
+        model_args: "ModelArguments" = None,
+        **kwargs
+    ):
+        super().__init__(finetuning_args, processor, gen_kwargs, **kwargs)
+        
+        self.eval_args = eval_args
+        self.model_args = model_args
+        self.data_args = DataArguments(template='fewshot')
+        self.eval_tokenizer = load_tokenizer(self.model_args)["tokenizer"]
+        self.eval_tokenizer.padding_side = "right"  # avoid overflow issue in batched inference for llama2
+        self.template = get_template_and_fix_tokenizer(self.eval_tokenizer, self.data_args)
+        self.eval_template = get_eval_template(self.eval_args.lang)
+        self.choice_inputs = [self.eval_tokenizer.encode(ch, add_special_tokens=False)[-1] for ch in CHOICES]
+        
+    def evaluate(
+        self,
+        eval_dataset: Optional["Dataset"] = None,
+        ignore_keys: Optional[List[str]] = None,
+        metric_key_prefix: str = "eval",
+        **gen_kwargs,
+    ) -> Dict[str, float]:
+        # loop_results = super().evaluate(
+        #     eval_dataset=eval_dataset,
+        #     ignore_keys=ignore_keys,
+        #     metric_key_prefix=metric_key_prefix,
+        #     **gen_kwargs
+        # )
+        
+        model = self._wrap_model(self.model, training=False)
+        
+        if len(self.accelerator._models) == 0 and model is self.model:
+            start_time = time.time()
+            model = (
+                self.accelerator.prepare(model)
+                if self.is_deepspeed_enabled
+                else self.accelerator.prepare_model(model, evaluation_mode=True)
+            )
+            self.model_preparation_time = round(time.time() - start_time, 4)
+
+            if self.is_fsdp_enabled:
+                self.model = model
+
+            # for the rest of this function `model` is the outside model, whether it was wrapped or not
+            if model is not self.model:
+                self.model_wrapped = model
+
+            # backward compatibility
+            if self.is_deepspeed_enabled:
+                self.deepspeed = self.model_wrapped
+
+        # if full fp16 or bf16 eval is wanted and this ``evaluation`` or ``predict`` isn't called
+        # while ``train`` is running, cast it to the right dtype first and then put on device
+        if not self.is_in_train:
+            if self.args.fp16_full_eval:
+                model = model.to(dtype=torch.float16, device=self.args.device)
+            elif self.args.bf16_full_eval:
+                model = model.to(dtype=torch.bfloat16, device=self.args.device)
+        model.eval()
+        
+        eval_task = self.eval_args.task.split("_")[0]
+        eval_split = self.eval_args.task.split("_")[1]
+
+        mapping = cached_file(
+            path_or_repo_id=os.path.join(self.eval_args.task_dir, eval_task),
+            filename="mapping.json",
+            cache_dir=self.model_args.cache_dir,
+            token=self.model_args.hf_hub_token,
+        )
+
+        with open(mapping, encoding="utf-8") as f:
+            categorys: Dict[str, Dict[str, str]] = json.load(f)
+
+        category_corrects = {subj: np.array([], dtype="bool") for subj in SUBJECTS}
+        pbar = tqdm(categorys.keys(), desc="Processing subjects", position=0)
+        results = {}
+        for subject in pbar:
+            dataset = load_dataset(
+                path=os.path.join(self.eval_args.task_dir, eval_task),
+                name=subject,
+                cache_dir=self.model_args.cache_dir,
+                download_mode=self.eval_args.download_mode,
+                token=self.model_args.hf_hub_token,
+                trust_remote_code=self.model_args.trust_remote_code,
+            )
+            pbar.set_postfix_str(categorys[subject]["name"])
+            
+            outputs, labels = [], []
+            batch_size = self.eval_args.batch_size
+
+            for batch_start in trange(0, len(dataset[eval_split]), batch_size, desc="Processing dataset", position=1, leave=False):
+                batch_inputs = []
+                batch_labels = []
+
+                for i in range(batch_start, min(batch_start + batch_size, len(dataset[eval_split]))):
+                    support_set = (
+                        dataset["train"].shuffle().select(range(min(self.eval_args.n_shot, len(dataset["train"]))))
+                    )
+                    messages = self.eval_template.format_example(
+                        target_data=dataset[eval_split][i],
+                        support_set=support_set,
+                        subject_name=categorys[subject]["name"],
+                    )
+
+                    input_ids, _ = self.template.encode_oneturn(tokenizer=self.eval_tokenizer, messages=messages)
+                    batch_inputs.append({"input_ids": input_ids, "attention_mask": [1] * len(input_ids)})
+                    batch_labels.append(messages[-1]["content"])
+
+                batch_input = self.eval_tokenizer.pad(
+                    batch_inputs, return_attention_mask=True, return_tensors="pt"
+                ).to(self.model.device)
+                labels.extend(batch_labels)
+
+                with torch.no_grad():
+                    logits = self.prediction_step(model, batch_input, False, ignore_keys=ignore_keys, **gen_kwargs)[1]
+                    # logits = model(**batch_input).logits
+                    lengths = torch.sum(batch_input['attention_mask'], dim=-1)
+                    probs = logits[torch.arange(len(lengths)), lengths - 1]
+                    probs = torch.nn.functional.softmax(probs[:, self.choice_inputs], dim=-1).detach()
+                    outputs.extend([chr(ord("A") + offset.item()) for offset in torch.argmax(probs, dim=-1)])
+
+                del batch_input, logits, probs
+                torch.cuda.empty_cache()
+                torch.cuda.synchronize()
+
+            corrects = np.array(outputs) == np.array(labels)
+            category_name = categorys[subject]["category"]
+            category_corrects[category_name] = np.concatenate([category_corrects[category_name], corrects], axis=0)
+            category_corrects["Average"] = np.concatenate([category_corrects["Average"], corrects], axis=0)
+            results[subject] = {str(i): outputs[i] for i in range(len(outputs))}
+            
+            del outputs, labels
+            torch.cuda.empty_cache()
+            torch.cuda.synchronize()
+
+        pbar.close()
+        outputs = EvalLoopOutput(predictions=None, label_ids=None, num_samples=None, metrics={
+            f'{metric_key_prefix}_{category_name}': 100 * np.mean(category_correct)
+                for category_name, category_correct in category_corrects.items() if len(category_correct)
+        })
+        
+        self.control = self.callback_handler.on_evaluate(self.args, self.state, self.control, outputs.metrics)
+
+        self._memory_tracker.stop_and_update_metrics(outputs.metrics)
+
+    def _save_results(self, category_corrects: Dict[str, "NDArray"], results: Dict[str, Dict[int, str]]) -> None:
+        score_info = "\n".join(
+            [
+                f"{category_name:>15}: {100 * np.mean(category_correct):.2f}"
+                for category_name, category_correct in category_corrects.items()
+                if len(category_correct)
+            ]
+        )
+        print(score_info)
+        if self.eval_args.save_dir is not None:
+            os.makedirs(self.eval_args.save_dir, exist_ok=False)
+            with open(os.path.join(self.eval_args.save_dir, "results.json"), "w", encoding="utf-8", newline="\n") as f:
+                json.dump(results, f, indent=2)
+
+            with open(os.path.join(self.eval_args.save_dir, "results.log"), "w", encoding="utf-8", newline="\n") as f:
+                f.write(score_info)
+
+
+def observe(prefix: str):
+    allocated = torch.cuda.memory_allocated() / (1024 ** 2)  # Convert bytes to MiB
+    reserved = torch.cuda.memory_reserved() / (1024 ** 2)  # Convert bytes to MiB
+
+    print(f"{prefix} - Allocated Memory: {allocated:.2f} MiB")
+    print(f"{prefix} - Reserved Memory: {reserved:.2f} MiB")
