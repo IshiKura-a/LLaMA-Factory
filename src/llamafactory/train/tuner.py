@@ -20,6 +20,8 @@ import torch
 import torch.distributed as dist
 from transformers import PreTrainedModel
 
+from llamafactory.hparams.parser import get_train_and_eval_args
+
 from ..data import get_template_and_fix_tokenizer
 from ..extras import logging
 from ..extras.constants import V_HEAD_SAFE_WEIGHTS_NAME, V_HEAD_WEIGHTS_NAME
@@ -51,7 +53,14 @@ logger = logging.get_logger(__name__)
 def _training_function(config: dict[str, Any]) -> None:
     args = config.get("args")
     callbacks: list[Any] = config.get("callbacks")
-    model_args, data_args, training_args, finetuning_args, generating_args = get_train_args(args)
+    
+    eval_benchmark = args.get('eval_benchmark', False)
+    eval_args = None
+    if eval_benchmark:
+        del args['eval_benchmark']
+        model_args, data_args, training_args, finetuning_args, eval_args, generating_args = get_train_and_eval_args(args)
+    else:
+        model_args, data_args, training_args, finetuning_args, generating_args = get_train_args(args)
 
     callbacks.append(LogCallback())
     if finetuning_args.pissa_convert:
@@ -65,7 +74,7 @@ def _training_function(config: dict[str, Any]) -> None:
     if finetuning_args.stage == "pt":
         run_pt(model_args, data_args, training_args, finetuning_args, callbacks)
     elif finetuning_args.stage == "sft":
-        run_sft(model_args, data_args, training_args, finetuning_args, generating_args, callbacks)
+        run_sft(model_args, data_args, training_args, finetuning_args, generating_args, callbacks, eval_args=eval_args)
     elif finetuning_args.stage == "rm":
         run_rm(model_args, data_args, training_args, finetuning_args, callbacks)
     elif finetuning_args.stage == "ppo":

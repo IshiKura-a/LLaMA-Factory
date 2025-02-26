@@ -1,0 +1,27 @@
+### model
+model_name_or_path: /zh/models/Qwen2-7B-Instruct
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: false
+do_eval: true
+eval_strategy: epoch
+eval_on_start: true
+finetuning_type: full
+deepspeed: examples/deepspeed/ds_z3_offload_config.json 
+
+### dataset
+dataset: eem_train
+eval_dataset: eem_test
+task: mmlu_test  # choices: [mmlu_test, ceval_validation, cmmlu_test]
+template: fewshot
+lang: en
+n_shot: 5
+eval_benchmark: true
+
+### output
+save_dir: saves/qwen2-7b/eval
+
+### eval
+batch_size: 64
