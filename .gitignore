@@ -179,3 +179,5 @@ generated_predictions.jsonl
 
 job*.yaml
 launch.py
+test.py
+*.code-workspace
