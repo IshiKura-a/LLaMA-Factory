@@ -1,0 +1,26 @@
+### model
+model_name_or_path: /mnt/zh/deepseekv3/dsv3_bf16_lora_sft
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: false
+do_eval: true
+eval_strategy: epoch
+eval_on_start: true
+finetuning_type: full
+deepspeed: examples/deepspeed/ds_z3_offload_config.json 
+
+### dataset
+dataset: eem_train
+eval_dataset: eem_test
+task: mmlu_test  # choices: [mmlu_test, ceval_validation, cmmlu_test]
+template: fewshot
+lang: en
+n_shot: 5
+eval_benchmark: true
+
+### output
+save_dir: /mnt/zh/outputs/dsv3_bf16_lora_qac
+### eval
+batch_size: 8
