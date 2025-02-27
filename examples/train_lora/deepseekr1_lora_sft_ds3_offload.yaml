@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: /mnt/zh/deepseekv3/dsv3_bf16_with_metadata
+model_name_or_path: /mnt/zh/deepseekv3/dsr1_bf16
 trust_remote_code: true
 
 ### method
@@ -20,7 +20,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /mnt/zh/deepseekv3/dsv3_bf16_lora_sft
+output_dir: /mnt/zh/deepseekv3/dsr1_bf16_lora_sft
 logging_steps: 1
 save_steps: 8
 plot_loss: true
