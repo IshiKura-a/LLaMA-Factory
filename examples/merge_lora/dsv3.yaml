@@ -1,0 +1,11 @@
+### model
+model_name_or_path: /mnt/zh/deepseekv3/dsv3_bf16_with_metadata
+adapter_name_or_path: /mnt/zh/deepseekv3/dsv3_bf16_lora_sft
+template: deepseek3
+trust_remote_code: true
+
+### export
+export_dir: /mnt/zh/deepseekv3/dsv3_bf16_lora_sft/merged
+export_size: 5
+export_device: cpu
+export_legacy_format: false
