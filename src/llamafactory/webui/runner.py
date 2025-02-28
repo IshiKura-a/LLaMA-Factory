@@ -173,7 +173,7 @@ class Runner:
             pure_bf16=(get("train.compute_type") == "pure_bf16"),
             plot_loss=True,
             trust_remote_code=True,
-            ddp_timeout=180000000,
+            ddp_timeout=1800000000,
             include_num_input_tokens_seen=True,
         )
         args.update(json.loads(get("train.extra_args")))
