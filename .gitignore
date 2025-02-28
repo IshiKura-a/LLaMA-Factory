@@ -181,3 +181,4 @@ jobs/
 launch.py
 test.py
 *.code-workspace
+*.xlsx

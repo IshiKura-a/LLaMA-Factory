@@ -21,6 +21,6 @@ n_shot: 5
 eval_benchmark: true
 
 ### output
-save_dir: /mnt/zh/outputs/dsv3_bf16_lora_qac
+save_dir: /mnt/zh/outputs/dsv3_bf16_lora_mmlu
 ### eval
 batch_size: 8
