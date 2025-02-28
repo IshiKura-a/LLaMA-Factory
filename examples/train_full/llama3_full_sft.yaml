@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: meta-llama/Meta-Llama-3-8B-Instruct
+model_name_or_path: meta-llama/Meta-Llama-3-8B
 trust_remote_code: true
 
 ### method
@@ -9,17 +9,18 @@ finetuning_type: full
 deepspeed: examples/deepspeed/ds_z3_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
 
 ### dataset
-dataset: identity,alpaca_en_demo
+dataset: qac_train_wo_think
+eval_dataset: qac_test
 template: llama3
-cutoff_len: 2048
-max_samples: 1000
+cutoff_len: 4096
+max_samples: 500
 overwrite_cache: true
 preprocessing_num_workers: 16
 dataloader_num_workers: 4
 
 ### output
-output_dir: saves/llama3-8b/full/sft
-logging_steps: 10
+output_dir: /mnt/zh/model/llama3_8b_sft_qac_e6
+logging_steps: 1
 save_steps: 500
 plot_loss: true
 overwrite_output_dir: true
@@ -27,10 +28,10 @@ save_only_model: false
 report_to: none  # choices: [none, wandb, tensorboard, swanlab, mlflow]
 
 ### train
-per_device_train_batch_size: 1
+per_device_train_batch_size: 8
 gradient_accumulation_steps: 2
 learning_rate: 1.0e-5
-num_train_epochs: 3.0
+num_train_epochs: 6.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1
 bf16: true
