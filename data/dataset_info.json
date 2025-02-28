@@ -1,4 +1,11 @@
 {
+  "qac_train_wo_think": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_train_wo_think.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp w/o think"
+    }
+  },
   "qac_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/train.jsonl",
     "columns": {
