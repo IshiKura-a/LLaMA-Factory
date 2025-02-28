@@ -24,3 +24,4 @@ eval_benchmark: true
 save_dir: /mnt/zh/outputs/dsv3_bf16_lora_mmlu
 ### eval
 batch_size: 8
+ddp_timeout: 1800000000
