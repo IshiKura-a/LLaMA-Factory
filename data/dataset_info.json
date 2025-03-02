@@ -1,4 +1,18 @@
 {
+  "qac_250302_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "text"
+    }
+  },
+  "qac_250302_test": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_val.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "text"
+    }
+  },
   "qac_train_wo_think": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_train_wo_think.jsonl",
     "columns": {
