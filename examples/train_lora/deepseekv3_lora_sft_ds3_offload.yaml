@@ -25,6 +25,8 @@ logging_steps: 1
 save_steps: 8
 plot_loss: true
 overwrite_output_dir: true
+report_to: wandb
+run_name: dsv3_bf16_lora_sft_wo_think
 
 ### train
 per_device_train_batch_size: 1
