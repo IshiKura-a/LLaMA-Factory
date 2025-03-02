@@ -11,20 +11,21 @@ lora_target: all
 deepspeed: examples/deepspeed/ds_z3_offload_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
 
 ### dataset
-dataset: qac_train
-eval_dataset: qac_test
-template: deepseek3
+dataset: qac_250302_train
+eval_dataset: qac_250302_test
+template: deepseek_r1
 cutoff_len: 4096
-max_samples: 500
 overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /mnt/zh/deepseekv3/dsr1_bf16_lora_sft
+output_dir: /mnt/zh/deepseekv3/dsr1_bf16_lora_sft_qac_250302
 logging_steps: 1
 save_steps: 8
 plot_loss: true
 overwrite_output_dir: true
+report_to: wandb
+run_name: dsr1_bf16_lora_sft_qac_250302
 
 ### train
 per_device_train_batch_size: 1

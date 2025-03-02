@@ -760,6 +760,11 @@ register_template(
     format_prefix=EmptyFormatter(slots=[{"bos_token"}]),
 )
 
+register_template(
+    name="deepseek_r1",
+    format_user=StringFormatter(slots=["<｜User｜>{{content}}<｜Assistant｜><think>"]),
+    format_prefix=EmptyFormatter(slots=[{"bos_token"}]),
+)
 
 register_template(
     name="deepseekcoder",
