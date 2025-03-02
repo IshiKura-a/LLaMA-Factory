@@ -10,7 +10,7 @@
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_val.jsonl",
     "columns": {
       "prompt": "prompt",
-      "response": "text"
+      "response": "JudgmentName"
     }
   },
   "qac_train_wo_think": {
