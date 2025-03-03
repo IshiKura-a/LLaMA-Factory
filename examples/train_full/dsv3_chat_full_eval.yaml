@@ -1,6 +1,7 @@
 ### model
 model_name_or_path: /mnt/zh/deepseekv3/dsv3_bf16_with_metadata
 trust_remote_code: true
+device_map: auto
 
 ### method
 finetuning_type: full
@@ -12,7 +13,7 @@ lang: en
 n_shot: 5
 
 ### output
-save_dir: /mnt/zh/eval/dsv3_chat_mmlu/
+save_dir: /mnt/zh/outputs/dsv3_chat_mmlu/
 
 ### eval
 batch_size: 16
