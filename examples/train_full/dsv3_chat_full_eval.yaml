@@ -15,4 +15,4 @@ n_shot: 5
 save_dir: /mnt/zh/outputs/dsv3_chat_mmlu/
 
 ### eval
-batch_size: 16
+batch_size: 1
