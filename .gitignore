@@ -179,6 +179,7 @@ generated_predictions.jsonl
 
 jobs/
 launch.py
+watch.py
 test.py
 *.code-workspace
 *.xlsx
