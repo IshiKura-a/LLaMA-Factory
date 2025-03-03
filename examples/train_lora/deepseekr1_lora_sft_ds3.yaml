@@ -36,3 +36,4 @@ lr_scheduler_type: cosine
 warmup_ratio: 0
 bf16: true
 ddp_timeout: 180000000
+disable_optimizer_check: true
