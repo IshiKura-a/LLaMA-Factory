@@ -1,7 +1,6 @@
 ### model
 model_name_or_path: /mnt/zh/deepseekv3/dsv3_bf16_with_metadata
 trust_remote_code: true
-device_map: auto
 
 ### method
 finetuning_type: full
