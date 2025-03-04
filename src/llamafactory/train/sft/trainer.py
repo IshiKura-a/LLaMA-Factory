@@ -18,6 +18,8 @@
 import json
 import os
 import time
+import gc
+import random
 from types import MethodType
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 from tqdm import tqdm, trange
@@ -258,6 +260,7 @@ class Seq2SeqTrainerWithBenchmark(CustomSeq2SeqTrainer):
         category_corrects = {subj: np.array([], dtype="bool") for subj in SUBJECTS}
         pbar = tqdm(categorys.keys(), desc="Processing subjects", position=0)
         results = {}
+        track_memory('init')
         for subject in pbar:
             dataset = load_dataset(
                 path=os.path.join(self.eval_args.task_dir, eval_task),
@@ -267,55 +270,73 @@ class Seq2SeqTrainerWithBenchmark(CustomSeq2SeqTrainer):
                 token=self.model_args.hf_hub_token,
                 trust_remote_code=self.model_args.trust_remote_code,
             )
+            track_memory('load ds')
             pbar.set_postfix_str(categorys[subject]["name"])
-            
-            outputs, labels = [], []
-            batch_size = self.eval_args.batch_size
 
-            for batch_start in trange(0, len(dataset[eval_split]), batch_size, desc="Processing dataset", position=1, leave=False):
+            batch_size = self.eval_args.batch_size
+            num_samples = len(dataset[eval_split])
+
+            outputs = np.empty(num_samples, dtype=object)
+            labels = np.empty(num_samples, dtype=object)
+
+            track_memory('init batch')
+            for batch_start in trange(0, num_samples, batch_size, desc="Processing dataset", position=1, leave=False):
                 batch_inputs = []
                 batch_labels = []
 
-                for i in range(batch_start, min(batch_start + batch_size, len(dataset[eval_split]))):
-                    support_set = (
-                        dataset["train"].shuffle().select(range(min(self.eval_args.n_shot, len(dataset["train"]))))
-                    )
+                for i in range(batch_start, min(batch_start + batch_size, num_samples)):
+                    track_memory(f'in batch {i}')
+                    train_indices = list(range(len(dataset["train"])))
+                    random.shuffle(train_indices)  # Shuffles indices, not the dataset
+                    selected_indices = train_indices[:min(self.eval_args.n_shot, len(dataset["train"]))]
+                    support_set = dataset["train"].select(selected_indices)
                     messages = self.eval_template.format_example(
                         target_data=dataset[eval_split][i],
                         support_set=support_set,
                         subject_name=categorys[subject]["name"],
                     )
-
+                    track_memory(f'in batch {i} create support set')
                     input_ids, _ = self.template.encode_oneturn(tokenizer=self.eval_tokenizer, messages=messages)
                     batch_inputs.append({"input_ids": input_ids, "attention_mask": [1] * len(input_ids)})
                     batch_labels.append(messages[-1]["content"])
+                    track_memory(f'in batch {i} encode and append')
 
                 batch_input = self.eval_tokenizer.pad(
                     batch_inputs, return_attention_mask=True, return_tensors="pt"
                 ).to(self.model.device)
-                labels.extend(batch_labels)
+                track_memory(f'batch pad')
+
+                labels[batch_start : batch_start + len(batch_labels)] = batch_labels
 
                 with torch.no_grad():
-                    logits = self.prediction_step(model, batch_input, False, ignore_keys=ignore_keys, **gen_kwargs)[1]
-                    # logits = model(**batch_input).logits
+                    track_memory(f'before inf')
+                    logits = model(**batch_input).logits
+                    torch.cuda.empty_cache()
+                    # logits = self.prediction_step(model, batch_input, False, ignore_keys=ignore_keys, **gen_kwargs)[1]
+                    track_memory(f'end inf')
                     lengths = torch.sum(batch_input['attention_mask'], dim=-1)
                     probs = logits[torch.arange(len(lengths)), lengths - 1]
                     probs = torch.nn.functional.softmax(probs[:, self.choice_inputs], dim=-1).detach()
-                    outputs.extend([chr(ord("A") + offset.item()) for offset in torch.argmax(probs, dim=-1)])
+                    preds = [chr(ord("A") + offset.item()) for offset in torch.argmax(probs, dim=-1)]
+                    track_memory(f'cal prob')
 
-                del batch_input, logits, probs
+                outputs[batch_start : batch_start + len(preds)] = preds
+                track_memory(f'log pred')
+
+
+                del batch_input, logits, probs, batch_inputs, batch_labels
                 torch.cuda.empty_cache()
-                torch.cuda.synchronize()
+                gc.collect()
 
-            corrects = np.array(outputs) == np.array(labels)
+            corrects = np.array(outputs) == labels
             category_name = categorys[subject]["category"]
             category_corrects[category_name] = np.concatenate([category_corrects[category_name], corrects], axis=0)
             category_corrects["Average"] = np.concatenate([category_corrects["Average"], corrects], axis=0)
             results[subject] = {str(i): outputs[i] for i in range(len(outputs))}
             
             del outputs, labels
+            gc.collect()
             torch.cuda.empty_cache()
-            torch.cuda.synchronize()
 
         pbar.close()
         outputs = EvalLoopOutput(predictions=None, label_ids=None, num_samples=None, metrics={
@@ -345,9 +366,16 @@ class Seq2SeqTrainerWithBenchmark(CustomSeq2SeqTrainer):
                 f.write(score_info)
 
 
-def observe(prefix: str):
-    allocated = torch.cuda.memory_allocated() / (1024 ** 2)  # Convert bytes to MiB
-    reserved = torch.cuda.memory_reserved() / (1024 ** 2)  # Convert bytes to MiB
+def track_memory(prefix: str = "Memory Check"):
+    return
+    if torch.cuda.current_device() == 1:
+        torch.cuda.synchronize()
+        allocated = torch.cuda.memory_allocated() / (1024 ** 3)  # Convert to GiB
+        reserved = torch.cuda.memory_reserved() / (1024 ** 3)  # Convert to GiB
+        free = torch.cuda.mem_get_info()[0] / (1024 ** 3)  # Get free memory in GiB
+        total = torch.cuda.mem_get_info()[1] / (1024 ** 3)  # Get total memory
 
-    print(f"{prefix} - Allocated Memory: {allocated:.2f} MiB")
-    print(f"{prefix} - Reserved Memory: {reserved:.2f} MiB")
+        if free > 40:
+            print(f"[{prefix}] Free: {free:.2f} GiB")
+        else:
+            print(f"[{prefix}] Allocated: {allocated:.2f} GiB | Reserved: {reserved:.2f} GiB | Free: {free:.2f} GiB | Total: {total:.2f} GiB")
