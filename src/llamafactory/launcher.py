@@ -16,6 +16,9 @@ from llamafactory.train.tuner import run_exp  # use absolute import
 
 
 def launch():
+    import wandb
+    from datetime import datetime
+    wandb.init(project="llama-factory", group="DDP", name=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     run_exp()
 
 
