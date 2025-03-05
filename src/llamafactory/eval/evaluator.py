@@ -75,6 +75,9 @@ class Evaluator:
         dist.init_process_group(backend="nccl", init_method="env://")  # Initialize distributed training
 
         self.model = load_model(load_tokenizer(self.model_args)["tokenizer"], self.model_args, finetuning_args)
+        for module in self.model.modules():
+            if hasattr(module, "_hf_hook"):  # Check if _hf_hook exists
+                module._hf_hook.execution_device = self.local_rank
         self.model.to(self.local_rank)
         self.model.eval()
 
@@ -86,8 +89,8 @@ class Evaluator:
 
     @torch.inference_mode()
     def batch_inference(self, batch_input: Dict[str, "torch.Tensor"]) -> List[str]:
-        """Perform batch inference on the model"""
-        print("%"*20, self.local_rank, set([param.device for param in self.model.parameters()]))
+        """Perform batch inference o
+        n the model"""
         batch_input = {k: v.to(self.local_rank) for k, v in batch_input.items()}  # Ensure inputs are on correct GPU
         logits = self.model(**batch_input).logits
         lengths = torch.sum(batch_input["attention_mask"], dim=-1)
@@ -189,7 +192,7 @@ class Evaluator:
 
     def _save_results(self, category_corrects: Dict[str, np.ndarray], results: Dict[str, Dict[int, str]]) -> None:
         """Save evaluation results (only on rank 0)"""
-        if self.global_rank == 0:
+        if self.global_rank == 0 and self.local_rank == 0:
             score_info = "\n".join(
                 [f"{category:>15}: {100 * np.mean(corrects):.2f}" for category, corrects in category_corrects.items() if len(corrects)]
             )
@@ -203,6 +206,9 @@ class Evaluator:
 
 
 def run_eval() -> None:
+    import wandb
+    from datetime import datetime
+    wandb.init(project="lf-eval", group="DDP", name=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     Evaluator().eval()
 
 if __name__ == "__main__":
