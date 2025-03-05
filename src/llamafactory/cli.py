@@ -82,7 +82,31 @@ def main():
     elif command == Command.ENV:
         print_env()
     elif command == Command.EVAL:
-        run_eval()
+        force_torchrun = is_env_enabled("FORCE_TORCHRUN")
+        if force_torchrun or (get_device_count() > 1 and not use_ray()):
+            from .eval import evaluator
+            master_addr = os.getenv("MASTER_ADDR", "127.0.0.1")
+            master_port = os.getenv("MASTER_PORT", str(random.randint(20001, 29999)))
+            logger.info_rank0(f"Initializing distributed tasks at: {master_addr}:{master_port}")
+            process = subprocess.run(
+                (
+                    "torchrun --nnodes {nnodes} --node_rank {node_rank} --nproc_per_node {nproc_per_node} "
+                    "--master_addr {master_addr} --master_port {master_port} {file_name} {args}"
+                )
+                .format(
+                    nnodes=os.getenv("NNODES", "1"),
+                    node_rank=os.getenv("NODE_RANK", "0"),
+                    nproc_per_node=os.getenv("NPROC_PER_NODE", str(get_device_count())),
+                    master_addr=master_addr,
+                    master_port=master_port,
+                    file_name=evaluator.__file__,
+                    args=" ".join(sys.argv[1:]),
+                )
+                .split()
+            )
+            sys.exit(process.returncode)
+        else:
+            run_eval()
     elif command == Command.EXPORT:
         export_model()
     elif command == Command.TRAIN:
