@@ -15,7 +15,6 @@ dataset: qac_250302_wo_think_train
 eval_dataset: qac_250302_test
 template: deepseek3
 cutoff_len: 4096
-max_samples: 500
 overwrite_cache: true
 preprocessing_num_workers: 16
 
