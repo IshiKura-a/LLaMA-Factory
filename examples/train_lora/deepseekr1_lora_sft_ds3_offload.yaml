@@ -19,7 +19,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /mnt/zh/deepseekv3/dsr1_bf16_lora_sft_qac_250302_run2
+output_dir: /mnt/zh/deepseekv3/dsr1_bf16_lora_sft_qac_250302_run3
 logging_steps: 1
 save_steps: 500
 plot_loss: true
