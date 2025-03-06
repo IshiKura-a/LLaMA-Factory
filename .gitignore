@@ -181,5 +181,6 @@ jobs/
 launch.py
 watch.py
 test.py
+gen_ans_wo_think.py
 *.code-workspace
 *.xlsx
