@@ -58,7 +58,6 @@ from llamafactory.eval.template import get_eval_template
 
 
 if TYPE_CHECKING:
-    
     from numpy.typing import NDArray
 
 
@@ -66,22 +65,17 @@ class Evaluator:
     def __init__(self, args: Optional[Dict[str, Any]] = None) -> None:
         """Initialize model, tokenizer, and distributed settings"""
         self.model_args, self.data_args, self.eval_args, finetuning_args = get_eval_args(args)
-        self.local_rank = int(os.getenv("LOCAL_RANK"))  # Rank of the current process on the node
-        self.global_rank = int(os.getenv("NODE_RANK"))  # Global rank across all nodes
-        self.world_size = int(os.getenv("WORLD_SIZE"))  # Total number of processes
-        if self.local_rank == 0:
-            print(f'Local Rank: {self.local_rank}, Global Rank: {self.global_rank}, World Size: {self.world_size}')
-        torch.cuda.set_device(self.local_rank)  # Assign each process to a GPU
-        dist.init_process_group(backend="nccl", init_method="env://")  # Initialize distributed training
+        self.local_rank = int(os.getenv("LOCAL_RANK"))
+        self.global_rank = int(os.getenv("NODE_RANK"))
+        self.world_size = int(os.getenv("WORLD_SIZE"))
 
-        self.model = load_model(load_tokenizer(self.model_args)["tokenizer"], self.model_args, finetuning_args)
-        for module in self.model.modules():
-            if hasattr(module, "_hf_hook"):  # Check if _hf_hook exists
-                module._hf_hook.execution_device = self.local_rank
-        self.model.to(self.local_rank)
-        self.model.eval()
+        self.model_args.device_map = 'auto'
+        dist.init_process_group(backend="nccl", init_method="env://")
 
         self.tokenizer = load_tokenizer(self.model_args)["tokenizer"]
+        self.model = load_model(self.tokenizer, self.model_args, finetuning_args)
+        self.model.eval()
+
         self.tokenizer.padding_side = "right"  # avoid overflow issue in batched inference for llama2
         self.template = get_template_and_fix_tokenizer(self.tokenizer, self.data_args)
         self.eval_template = get_eval_template(self.eval_args.lang)
@@ -89,9 +83,6 @@ class Evaluator:
 
     @torch.inference_mode()
     def batch_inference(self, batch_input: Dict[str, "torch.Tensor"]) -> List[str]:
-        """Perform batch inference o
-        n the model"""
-        batch_input = {k: v.to(self.local_rank) for k, v in batch_input.items()}  # Ensure inputs are on correct GPU
         logits = self.model(**batch_input).logits
         lengths = torch.sum(batch_input["attention_mask"], dim=-1)
         word_probs = torch.stack([logits[i, lengths[i] - 1] for i in range(len(lengths))], dim=0)
@@ -99,11 +90,10 @@ class Evaluator:
         return [chr(ord("A") + offset.item()) for offset in torch.argmax(choice_probs, dim=-1)]
 
     def eval(self) -> None:
-        """Evaluate the model across multiple GPUs using DataParallel"""
         if self.global_rank == 0:
             print(f"Starting Evaluation | Global Rank: {self.global_rank}, World Size: {self.world_size}")
-
-        eval_task, eval_split = self.eval_args.task.split("_")
+        eval_task = self.eval_args.task.split("_")[0]
+        eval_split = self.eval_args.task.split("_")[1]
 
         mapping = cached_file(
             path_or_repo_id=os.path.join(self.eval_args.task_dir, eval_task),
@@ -157,22 +147,20 @@ class Evaluator:
                     batch_inputs.append({"input_ids": input_ids, "attention_mask": [1] * len(input_ids)})
                     batch_labels.append(messages[-1]["content"])
 
-                batch_input = self.tokenizer.pad(batch_inputs, return_attention_mask=True, return_tensors="pt").to(self.local_rank)
+                batch_input = self.tokenizer.pad(batch_inputs, return_attention_mask=True, return_tensors="pt").to(self.model.device)
                 preds = self.batch_inference(batch_input)
 
                 outputs.extend(preds)
                 labels.extend(batch_labels)
 
-                torch.cuda.empty_cache()  # Free unused memory
+                torch.cuda.empty_cache()
 
-            # Gather results across all nodes
             gathered_outputs = [None] * self.world_size
             gathered_labels = [None] * self.world_size
             dist.all_gather_object(gathered_outputs, outputs)
             dist.all_gather_object(gathered_labels, labels)
 
             if self.global_rank == 0:
-                # Flatten lists
                 gathered_outputs = [item for sublist in gathered_outputs for item in sublist]
                 gathered_labels = [item for sublist in gathered_labels for item in sublist]
 
@@ -182,7 +170,8 @@ class Evaluator:
                 category_corrects["Average"] = np.concatenate([category_corrects["Average"], corrects], axis=0)
                 results[subject] = {str(i): gathered_outputs[i] for i in range(len(gathered_outputs))}
 
-        dist.barrier()  # Ensure all nodes finish before proceeding
+        pbar.close()
+        dist.barrier() 
         if self.global_rank == 0:
             self._save_results(category_corrects, results)
 
@@ -190,7 +179,7 @@ class Evaluator:
         """Collate function for DataLoader"""
         return batch  # Return raw batch (each example is processed individually in eval loop)
 
-    def _save_results(self, category_corrects: Dict[str, np.ndarray], results: Dict[str, Dict[int, str]]) -> None:
+    def _save_results(self, category_corrects: Dict[str, "NDArray"], results: Dict[str, Dict[int, str]]) -> None:
         """Save evaluation results (only on rank 0)"""
         if self.global_rank == 0 and self.local_rank == 0:
             score_info = "\n".join(
