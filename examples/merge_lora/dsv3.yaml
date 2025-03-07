@@ -1,11 +1,11 @@
 ### model
 model_name_or_path: /mnt/zh/deepseekv3/dsv3_bf16_with_metadata
-adapter_name_or_path: /mnt/zh/deepseekv3/dsv3_bf16_lora_sft_wo_think/checkpoint-16
+adapter_name_or_path: /mnt/zh/deepseekv3/dsv3_bf16_lora_sft_wo_think_qac_250302
 template: deepseek3
 trust_remote_code: true
 
 ### export
-export_dir: /mnt/zh/deepseekv3/dsv3_bf16_lora_sft_wo_think/merged_s16
+export_dir: /mnt/zh/deepseekv3/dsv3_bf16_lora_sft_wo_think_qac_250302/merged
 export_size: 8
 export_device: cpu
 export_legacy_format: false
