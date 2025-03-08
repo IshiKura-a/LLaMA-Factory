@@ -5,7 +5,7 @@ trust_remote_code: true
 ### method
 stage: sft
 do_train: true
-do_predict: true
+do_predict: false
 finetuning_type: full
 deepspeed: examples/deepspeed/ds_z3_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
 flash_attn: fa2
@@ -42,8 +42,8 @@ ddp_timeout: 180000000
 # eval_steps: 500
 
 ### predict
-temperature: 0.6
-top_p: 0.95
-top_k: 20
-per_device_eval_batch_size: 8
-predict_with_generate: true
+# temperature: 0.6
+# top_p: 0.95
+# top_k: 20
+# per_device_eval_batch_size: 8
+# predict_with_generate: true
