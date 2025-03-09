@@ -1,6 +1,6 @@
 ### model
 model_name_or_path: /mnt/zh/deepseekv3/dsr1_bf16
-adapter_name_or_path: /mnt/zh/deepseekv3/dsr1_bf16_lora_sft_qac_250302_run3/merged_lora
+adapter_name_or_path: /mnt/zh/deepseekv3/dsr1_bf16_lora_sft_qac_250302_run3/checkpoint-48/
 template: deepseek3
 trust_remote_code: true
 
