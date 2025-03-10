@@ -178,7 +178,7 @@ swanlog/
 generated_predictions.jsonl
 
 jobs/
-launch.py
+async_launch.py
 watch.py
 test.py
 query.py
