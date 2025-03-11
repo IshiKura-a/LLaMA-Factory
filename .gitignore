@@ -181,6 +181,7 @@ jobs/
 launch.py
 watch.py
 test.py
+anal.py
 query.py
 gen_ans_wo_think.py
 *.code-workspace
