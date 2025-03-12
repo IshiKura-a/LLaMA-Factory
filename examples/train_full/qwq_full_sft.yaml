@@ -19,7 +19,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /mnt/zh/qwen/qwq_sft_qacv2_lr5e-5_e4
+output_dir: /mnt/zh/qwen/qwq_sft_qacv2_lr5e-5_e5
 logging_steps: 1
 save_steps: 500
 plot_loss: true
