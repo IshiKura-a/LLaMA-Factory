@@ -13,6 +13,13 @@
       "response": "text"
     }
   },
+  "qacv2_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v2.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "text"
+    }
+  },
   "qac_250302_test": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_val.jsonl",
     "columns": {
