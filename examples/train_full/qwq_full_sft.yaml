@@ -11,7 +11,7 @@ deepspeed: examples/deepspeed/ds_z3_offload_gather_config.json  # choices: [ds_z
 flash_attn: fa2
 
 ### dataset
-dataset: qac_250302_train
+dataset: qacv2_train
 eval_dataset: qac_250302_test
 template: qwq
 cutoff_len: 4096
