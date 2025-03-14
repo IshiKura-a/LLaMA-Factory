@@ -82,7 +82,7 @@ class Evaluator:
         self.choice_inputs = [self.tokenizer.encode(ch, add_special_tokens=False)[-1] for ch in CHOICES]
 
     @torch.inference_mode()
-    def batch_inference(self, batch_input: Dict[str, "torch.Tensor"]) -> List[str]:
+    def batch_inference(self, batch_input: Dict[str, "torch.Tensor"]) -> list[str]:
         logits = self.model(**batch_input).logits
         lengths = torch.sum(batch_input["attention_mask"], dim=-1)
         word_probs = torch.stack([logits[i, lengths[i] - 1] for i in range(len(lengths))], dim=0)
