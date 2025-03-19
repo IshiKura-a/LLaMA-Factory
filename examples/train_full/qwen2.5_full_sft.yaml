@@ -1,0 +1,35 @@
+### model
+model_name_or_path: Qwen/Qwen2.5-1.5B
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: true
+do_predict: false
+finetuning_type: full
+deepspeed: examples/deepspeed/ds_z0_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
+flash_attn: fa2
+
+### dataset
+dataset: ad_profile_train
+template: qwen
+cutoff_len: 3000
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+### output
+output_dir: /datacosmos/local/User/xinyu2/AdvertiserUnderstanding/GPT4Selection/finetune/pme_cluster/qwen2.5_1.5B
+logging_steps: 1
+save_steps: 500
+plot_loss: true
+overwrite_output_dir: true
+
+### train
+per_device_train_batch_size: 8
+gradient_accumulation_steps: 2
+learning_rate: 1e-5
+num_train_epochs: 3.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.02
+bf16: true
+ddp_timeout: 180000000
