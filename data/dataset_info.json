@@ -1,4 +1,11 @@
 {
+  "ad_profile_train": {
+    "file_name": "/datacosmos/local/User/xinyu2/AdvertiserUnderstanding/GPT4Selection/finetune/Train_450K_URL_Title_Content_Callouts_Summary_v2.json",
+    "columns": {
+      "prompt": "prompt",
+      "response": "completion"
+    }
+  },
   "qacv2.3.0317beta_enrich_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v2.3.0317beta_enrich.jsonl",
     "columns": {
