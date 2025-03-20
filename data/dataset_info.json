@@ -6,6 +6,13 @@
       "response": "completion"
     }
   },
+  "qacv2.4.0320_enrich_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v2.4.0320_enrich.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
   "qacv2.3.0317beta_enrich_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v2.3.0317beta_enrich.jsonl",
     "columns": {
