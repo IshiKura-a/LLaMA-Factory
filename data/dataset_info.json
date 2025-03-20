@@ -3,7 +3,7 @@
     "file_name": "/mnt/zh/dataset/ads_sft/qac_reasoning.jsonl",
     "columns": {
       "prompt": "prompt",
-      "response": "r1 resp"
+      "response": "text"
     }
   },
   "ad_profile_train": {
