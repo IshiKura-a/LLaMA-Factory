@@ -6,6 +6,13 @@
       "response": "text"
     }
   },
+  "qac_ref_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_ref.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "text"
+    }
+  },
   "ad_profile_train": {
     "file_name": "/data/local/User/xinyu2/AdvertiserUnderstanding/GPT4Selection/finetune/Train_450K_URL_Title_Content_Callouts_Summary_v2.json",
     "columns": {
