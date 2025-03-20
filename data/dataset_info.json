@@ -6,6 +6,13 @@
       "response": "text"
     }
   },
+  "qac_ref2_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_ref2_dev.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "text"
+    }
+  },
   "qac_ref_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_ref.jsonl",
     "columns": {
