@@ -1,4 +1,11 @@
 {
+  "qac_reasoning_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_reasoning.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
   "ad_profile_train": {
     "file_name": "/data/local/User/xinyu2/AdvertiserUnderstanding/GPT4Selection/finetune/Train_450K_URL_Title_Content_Callouts_Summary_v2.json",
     "columns": {
