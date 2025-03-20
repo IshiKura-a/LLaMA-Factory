@@ -178,13 +178,6 @@ swanlog/
 generated_predictions.jsonl
 
 jobs/
-async_launch.py
-call.py
-data_selection.py
-watch.py
-test.py
-anal.py
-query.py
-gen_ans_wo_think.py
+utils/
 *.code-workspace
 *.xlsx
