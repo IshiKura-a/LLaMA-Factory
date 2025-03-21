@@ -1,4 +1,11 @@
 {
+  "qacv2.4.0321_rs_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v2.4.0321_rs.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
   "qac_reasoning_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_reasoning.jsonl",
     "columns": {
