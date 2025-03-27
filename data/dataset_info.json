@@ -105,7 +105,7 @@
     }
   },
   "qacv2.3.0317_enrich_Swedish_train": {
-    "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_Swedish_Portuguese.jsonl",
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_Swedish.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "r1 resp"
