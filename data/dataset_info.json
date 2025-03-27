@@ -55,21 +55,77 @@
       "response": "r1 resp"
     }
   },
-  "qacv2.3.0317_Chinese_train": {
+  "qacv2.3.0317_enrich_German_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_German.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
+  "qacv2.3.0317_enrich_Italian_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_Italian.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
+  "qacv2.3.0317_enrich_Japanese_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_Japanese.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
+  "qacv2.3.0317_enrich_Korean_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_Korean.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
+  "qacv2.3.0317_enrich_Dutch_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_Dutch.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
+  "qacv2.3.0317_enrich_Brazilian_Portuguese_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_Brazilian_Portuguese.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
+  "qacv2.3.0317_enrich_European_Portuguese_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_European_Portuguese.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
+  "qacv2.3.0317_enrich_Swedish_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_Swedish_Portuguese.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
+  "qacv2.3.0317_enrich_Chinese_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_Chinese.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "r1 resp"
     }
   },
-  "qacv2.3.0317_French_train": {
+  "qacv2.3.0317_enrich_French_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_French.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "r1 resp"
     }
   },
-  "qacv2.3.0317_Spanish_train": {
+  "qacv2.3.0317_enrich_Spanish_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_dev_v2.3.0317_Spanish.jsonl",
     "columns": {
       "prompt": "prompt",
