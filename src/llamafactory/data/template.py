@@ -1025,6 +1025,31 @@ register_template(
     stop_words=["<|eot_id|>", "<|eom_id|>"],
 )
 
+register_template(
+    name="llama3_think",
+    format_user=StringFormatter(
+        slots=[
+            (
+                "<|start_header_id|>user<|end_header_id|>\n\n{{content}}<|eot_id|>"
+                "<|start_header_id|>assistant<|end_header_id|>\n\n<think>"
+            )
+        ]
+    ),
+    format_assistant=StringFormatter(slots=["{{content}}<|eot_id|>"]),
+    format_system=StringFormatter(slots=["<|start_header_id|>system<|end_header_id|>\n\n{{content}}<|eot_id|>"]),
+    format_function=FunctionFormatter(slots=["{{content}}<|eot_id|>"], tool_format="llama3"),
+    format_observation=StringFormatter(
+        slots=[
+            (
+                "<|start_header_id|>ipython<|end_header_id|>\n\n{{content}}<|eot_id|>"
+                "<|start_header_id|>assistant<|end_header_id|>\n\n"
+            )
+        ]
+    ),
+    format_tools=ToolFormatter(tool_format="llama3"),
+    format_prefix=EmptyFormatter(slots=[{"bos_token"}]),
+    stop_words=["<|eot_id|>", "<|eom_id|>"],
+)
 
 register_template(
     name="llama4",
