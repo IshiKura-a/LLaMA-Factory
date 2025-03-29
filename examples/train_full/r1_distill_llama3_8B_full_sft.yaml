@@ -13,7 +13,7 @@ flash_attn: fa2
 ### dataset
 dataset: qacv2.3.0317_enrich_train
 eval_dataset: qac_250302_test
-template: qwq
+template: llama3_think
 cutoff_len: 4096
 overwrite_cache: true
 preprocessing_num_workers: 16
