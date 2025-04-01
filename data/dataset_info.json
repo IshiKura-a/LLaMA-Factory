@@ -1,4 +1,11 @@
 {
+  "qac_ablation_train": {
+    "filename": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_ablation.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "r1 resp"
+    }
+  },
   "qacv2.4.0325_rs2_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v2.4.0325_rs2.jsonl",
     "columns": {
