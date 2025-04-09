@@ -153,6 +153,13 @@
       "response": "r1 resp"
     }
   },
+  "qacv2.3.0317_enrich_ans_only_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v2.3.0317_enrich_pre_ans.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "label"
+    }
+  },
   "qacv2.2.0314_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v2.2.0314.jsonl",
     "columns": {
