@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: /mnt/zh/qwen/QwQ-32B
+model_name_or_path: Qwen/Qwen2.5-32B
 trust_remote_code: true
 
 ### method
@@ -19,7 +19,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /mnt/zh/qwen/qwq_sft_qacv2.3.0317_enrich_ans_only_lr5e-5_e1
+output_dir: /mnt/zh/qwen/qwen2.5_32B_sft_qacv2.3.0317_enrich_ans_only_lr5e-5_e1
 logging_steps: 1
 save_steps: 500
 plot_loss: true
