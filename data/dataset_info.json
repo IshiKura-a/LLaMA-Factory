@@ -7,7 +7,7 @@
     }
   },
   "ep_medium": {
-    "file_name": "/data/local/User/zihao/datasets/entity_prediction/easy_medium_40k.jsonl",
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/medium_negatives_40k.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "match"
