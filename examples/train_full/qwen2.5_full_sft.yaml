@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: Qwen/Qwen2.5-1.5B
+model_name_or_path: /data/local/User/zihao/base_models/Qwen2.5-0.5B
 trust_remote_code: true
 
 ### method
@@ -10,24 +10,24 @@ finetuning_type: full
 deepspeed: examples/deepspeed/ds_z0_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
 
 ### dataset
-dataset: ad_profile_train
+dataset: ep_easy,ep_medium,ep_hard_positive_train,ep_hard_negative_train
 template: qwen
-cutoff_len: 3000
+cutoff_len: 1024
 overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /data/local/User/xinyu2/AdvertiserUnderstanding/GPT4Selection/finetune/pme_cluster/qwen2.5_1.5B
+output_dir: /data/local/User/zihao/entity_prediction/outputs/qwen2.5_0.5B_215k_0414_lr1e-5_e2_bsz256
 logging_steps: 1
-save_steps: 500
+save_steps: 843
 plot_loss: true
 overwrite_output_dir: true
 
 ### train
-per_device_train_batch_size: 8
+per_device_train_batch_size: 256
 gradient_accumulation_steps: 2
 learning_rate: 1.0e-5
-num_train_epochs: 3.0
+num_train_epochs: 2.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.02
 bf16: true
