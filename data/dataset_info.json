@@ -1,41 +1,41 @@
 {
   "ep_easy": {
-    "file_name": "/data/local/User/datasets/entity_prediction/easy_negatives_40k.jsonl",
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/easy_negatives_40k.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "match"
     }
   },
   "ep_medium": {
-    "file_name": "/data/local/User/datasets/entity_prediction/easy_medium_40k.jsonl",
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/easy_medium_40k.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "match"
     }
   },
   "ep_hard_positive_train": {
-    "file_name": "/data/local/User/datasets/entity_prediction/hard_positives_gpt4o_0410_34k_train.jsonl",
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/hard_positives_gpt4o_0410_34k_train.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "match"
     }
   },
   "ep_hard_positive_test": {
-    "file_name": "/data/local/User/datasets/entity_prediction/hard_positives_gpt4o_0410_10k_test.jsonl",
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/hard_positives_gpt4o_0410_10k_test.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "match"
     }
   },
   "ep_hard_negative_train": {
-    "file_name": "/data/local/User/datasets/entity_prediction/hard_negatives_gpt4o_0410_101k_train.jsonl",
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/hard_negatives_gpt4o_0410_101k_train.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "match"
     }
   },
   "ep_hard_negative_test": {
-    "file_name": "/data/local/User/datasets/entity_prediction/hard_negatives_gpt4o_0410_20k_test.jsonl",
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/hard_negatives_gpt4o_0410_20k_test.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "match"
