@@ -19,12 +19,12 @@ preprocessing_num_workers: 16
 ### output
 output_dir: /data/local/User/zihao/entity_prediction/outputs/qwen2.5_0.5B_215k_0414_lr1e-7_e2_bsz256
 logging_steps: 1
-save_steps: 843
+save_steps: 3371
 plot_loss: true
 overwrite_output_dir: true
 
 ### train
-per_device_train_batch_size: 256
+per_device_train_batch_size: 64
 gradient_accumulation_steps: 2
 learning_rate: 1.0e-7
 num_train_epochs: 2.0
