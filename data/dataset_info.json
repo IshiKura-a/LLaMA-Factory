@@ -1,4 +1,11 @@
 {
+  "am_1k": {
+    "file_name": "/mnt/zh/dataset/public_reasoning/am_0.9M_sample_1k_formatted.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "output"
+    }
+  },
   "qac_ablation_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_ablation.jsonl",
     "columns": {
