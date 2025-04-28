@@ -1,4 +1,11 @@
 {
+  "qac_L3manageQ5_sample1w_qwqRejS": {
+    "file_name": "/data/local/User/zihao/datasets/qac/qac_L3manageQ5_sample1w_qwq_ans.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "resp"
+    }
+  },
   "ep_easy": {
     "file_name": "/data/local/User/zihao/datasets/entity_prediction/easy_negatives_40k.jsonl",
     "columns": {
