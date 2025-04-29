@@ -186,3 +186,4 @@ query.py
 gen_ans_wo_think.py
 *.code-workspace
 *.xlsx
+templates
