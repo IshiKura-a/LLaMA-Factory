@@ -1,6 +1,6 @@
 {
   "qac_L3manageQ5_sample1w_qwqRejS": {
-    "file_name": "/data/local/User/zihao/datasets/qac/qac_L3manageQ5_sample1w_qwq_ans.jsonl",
+    "file_name": "/data/local/User/zihao/datasets/qac/qac_L3manageQ5_sample1w_formatted_qwq.jsonl",
     "columns": {
       "prompt": "prompt",
       "response": "resp"
