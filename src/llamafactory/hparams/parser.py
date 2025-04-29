@@ -181,7 +181,7 @@ def _parse_train_args(args: Optional[Union[dict[str, Any], list[str]]] = None) -
     allow_extra_keys = is_env_enabled("ALLOW_EXTRA_ARGS")
     return _parse_args(parser, args, allow_extra_keys=allow_extra_keys)
 
-def _parse_train_and_eval_args(args: Optional[Union[Dict[str, Any], List[str]]] = None) -> _T_AND_E_CLS:
+def _parse_train_and_eval_args(args: Optional[Union[dict[str, Any], list[str]]] = None) -> _T_AND_E_CLS:
     parser = HfArgumentParser(_T_AND_E_ARGS, conflict_handler='resolve')
     allow_extra_keys = is_env_enabled("ALLOW_EXTRA_ARGS")
     return _parse_args(parser, args, allow_extra_keys=allow_extra_keys)
@@ -471,7 +471,7 @@ def get_eval_args(args: Optional[Union[dict[str, Any], list[str]]] = None) -> _E
     return model_args, data_args, eval_args, finetuning_args
 
 
-def get_train_and_eval_args(args: Optional[Union[Dict[str, Any], List[str]]] = None) -> _T_AND_E_CLS:
+def get_train_and_eval_args(args: Optional[Union[dict[str, Any], list[str]]] = None) -> _T_AND_E_CLS:
     model_args, data_args, training_args, finetuning_args, eval_args, generating_args = _parse_train_and_eval_args(args)
     
     if training_args.should_log:
