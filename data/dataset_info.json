@@ -1,4 +1,25 @@
 {
+  "ep_easy_v2": {
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/easy_negatives_40k_v2.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "match"
+    }
+  },
+  "ep_medium_v2": {
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/medium_negatives_40k_v2.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "match"
+    }
+  },
+  "ep_hard_v2": {
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/ep_train_hard_7kquery.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "match"
+    }
+  },
   "qac_L3manageQ5_sample1w_qwqRejS": {
     "file_name": "/data/local/User/zihao/datasets/qac/qac_L3manageQ5_sample1w_qwq.jsonl",
     "columns": {
