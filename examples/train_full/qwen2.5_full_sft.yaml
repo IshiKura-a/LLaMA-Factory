@@ -10,14 +10,14 @@ finetuning_type: full
 deepspeed: examples/deepspeed/ds_z2_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
 
 ### dataset
-dataset: ep_easy_v2,ep_medium_v2,ep_hard_v2
+dataset: ep_hard_v2
 template: qwen
 cutoff_len: 256
 overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /data/local/User/zihao/entity_prediction/outputs/qwen2.5_0.5B_v2_lr5e-5_e2_bsz16
+output_dir: /data/local/User/zihao/entity_prediction/outputs/qwen2.5_0.5B_hardv2_lr5e-5_e2_bsz16
 logging_steps: 1
 save_strategy: epoch
 plot_loss: true
