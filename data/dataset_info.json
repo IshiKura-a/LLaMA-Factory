@@ -1,4 +1,25 @@
 {
+  "qacv3_Chinese_pre_ans_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v3_Chinese_pre_ans.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "resp"
+    }
+  },
+  "qacv3_French_pre_ans_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v3_French_pre_ans.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "resp"
+    }
+  },
+  "qacv3_Spanish_pre_ans_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v3_Spanish_pre_ans.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "resp"
+    }
+  },
   "qacv3_pre_ans_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v3_pre_ans.jsonl",
     "columns": {
