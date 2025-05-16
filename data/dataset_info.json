@@ -1,5 +1,5 @@
 {
-  "qac_v3_pre_ans_train": {
+  "qacv3_pre_ans_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v3_pre_ans.jsonl",
     "columns": {
       "prompt": "prompt",
