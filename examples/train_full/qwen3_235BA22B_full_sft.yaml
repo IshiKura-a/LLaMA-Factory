@@ -11,7 +11,7 @@ deepspeed: examples/deepspeed/ds_z3_offload_gather_config.json  # choices: [ds_z
 flash_attn: fa2
 
 ### dataset
-dataset: qacv2.3.0317_enrich_pre_ans_train
+dataset: qacv3_pre_ans_train
 eval_dataset: qac_250302_test
 template: qwen3
 cutoff_len: 4096
@@ -19,16 +19,16 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /mnt/zh/qwen/qwen3_235BA22B_sft_qacv2.3.0317_enrich_pre_ans_lr1e-4_e4
+output_dir: /mnt/zh/qwen/qwen3_235BA22B_sft_qacv3_pre_ans_lr5e-5_e4
 logging_steps: 1
-save_steps: 10
+saving_strategy: epoch
 plot_loss: true
 overwrite_output_dir: False
 
 ### train
 per_device_train_batch_size: 4
 gradient_accumulation_steps: 1
-learning_rate: 1.0e-4
+learning_rate: 5.0e-5
 num_train_epochs: 4.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1

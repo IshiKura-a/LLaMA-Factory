@@ -1,4 +1,11 @@
 {
+  "qac_v3_pre_ans_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v3_pre_ans.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "resp"
+    }
+  },
   "ep_easy_v2": {
     "file_name": "/data/local/User/zihao/datasets/entity_prediction/easy_negatives_40k_v2.jsonl",
     "columns": {
