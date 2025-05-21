@@ -21,7 +21,7 @@ preprocessing_num_workers: 16
 ### output
 output_dir: /mnt/zh/qwen/qwen3_30BA3B_sft_qacv3_3ML_pre_ans_lr1e-5_e4
 logging_steps: 1
-save_steps: 40
+save_strategy: epoch
 plot_loss: true
 overwrite_output_dir: true
 
