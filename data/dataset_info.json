@@ -1,4 +1,12 @@
 {
+  "gsm8k": {
+    "hf_hub_url": "gsm8k",
+    "folder": "main",
+    "columns": {
+      "prompt": "question",
+      "response": "answer"
+    }
+  },
   "qacv3_Chinese_pre_ans_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v3_Chinese_pre_ans.jsonl",
     "columns": {
