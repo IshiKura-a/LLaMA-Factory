@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: /mnt/zh/qwen/DeepSeek-R1-0528-Qwen3-8B
+model_name_or_path: /mnt/zh/qwen/Qwen3-30B-A3B
 trust_remote_code: true
 
 ### method
@@ -11,7 +11,7 @@ deepspeed: examples/deepspeed/ds_z3_offload_gather_config.json  # choices: [ds_z
 flash_attn: fa2
 
 ### dataset
-dataset: qacv3_pre_ans_train,qacv3_Chinese_pre_ans_train,qacv3_French_pre_ans_train,qacv3_Spanish_pre_ans_train
+dataset: qacv3_pre_ans_train,qacv3_French_pre_ans_train,qacv3_German_pre_ans_train
 eval_dataset: qac_250302_test
 template: qwen3
 cutoff_len: 4096
@@ -19,7 +19,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /mnt/zh/qwen/r1_0528_distill_qwen3_8B_sft_qacv3_3ML_pre_ans_lr5e-5_e4
+output_dir: /mnt/zh/qwen/qwen3_30BA3B_sft_qacv3_2ML_pre_ans_lr5e-5_e4
 logging_steps: 1
 save_strategy: epoch
 plot_loss: true
