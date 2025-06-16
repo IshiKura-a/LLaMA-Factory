@@ -76,20 +76,24 @@ class RayArguments:
                 self.ray_storage_filesystem = fs.GcsFileSystem()
 
 
+class SerializableTimedelta(timedelta):
+    def to_json(self):
+        # You could use total_seconds() or an ISO 8601 duration string
+        return {
+            "__timedelta__": True,
+            "seconds": self.total_seconds()
+        }
 
-class SerializableTimedelta(dict):
-    def __init__(self, **kwargs):
-        self._td = timedelta(**kwargs)
-        super().__init__(seconds=self._td.total_seconds())
+    @classmethod
+    def from_json(cls, obj):
+        if isinstance(obj, dict) and obj.get("__timedelta__"):
+            return cls(seconds=obj["seconds"])
+        raise TypeError("Invalid object for SerializableTimedelta")
 
-    def to_timedelta(self):
-        return self._td
-
-    def __getattr__(self, name):
-        return getattr(self._td, name)
-
+    # Optional: for easier default JSON serialization
     def __repr__(self):
-        return f"SerializableTimedelta(seconds={self._td.total_seconds()})"
+        return f"SerializableTimedelta(seconds={self.total_seconds()})"
+
 
 @dataclass
 class TrainingArguments(RayArguments, Seq2SeqTrainingArguments):
@@ -106,7 +110,7 @@ class TrainingArguments(RayArguments, Seq2SeqTrainingArguments):
         RayArguments.__post_init__(self)
         
         if self.timeout:
-            kwargs = InitProcessGroupKwargs(timeout=SerializableTimedelta(seconds=self.timeout))
+            kwargs = InitProcessGroupKwargs(timeout=SerializableTimedelta(self.timeout))
             if getattr(self.accelerator_config, 'kwargs_handlers', None):
                 setattr(self.accelerator_config, 'kwargs_handlers', 
                         getattr(self.accelerator_config, 'kwargs_handlers') + [kwargs])
