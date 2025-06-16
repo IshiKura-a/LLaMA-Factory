@@ -19,6 +19,7 @@ from typing import Literal, Optional, Union
 from transformers import Seq2SeqTrainingArguments
 from transformers.training_args import _convert_str_dict
 from accelerate import InitProcessGroupKwargs
+from transformers.trainer_pt_utils import AcceleratorConfig
 from datetime import timedelta
 
 from ..extras.misc import use_ray
@@ -91,7 +92,8 @@ class TrainingArguments(RayArguments, Seq2SeqTrainingArguments):
         
         if self.timeout:
             kwargs = InitProcessGroupKwargs(timeout=timedelta(self.timeout))
-            if self.accelerator_config['kwargs_handlers']:
-                self.accelerator_config['kwargs_handlers'].append(kwargs)
+            if getattr(self.accelerator_config, 'kwargs_handlers', None):
+                setattr(self.accelerator_config, 'kwargs_handlers', 
+                        getattr(self.accelerator_config, 'kwargs_handlers') + [kwargs])
             else:
-                self.accelerator_config['kwargs_handlers'] = [kwargs]
+                setattr(self.accelerator_config, 'kwargs_handlers', [kwargs])
