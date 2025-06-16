@@ -34,7 +34,7 @@ num_train_epochs: 4.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1
 bf16: true
-timeout: 1800000
+ddp_timeout: 1800000
 
 ### eval
 # val_size: 0.1

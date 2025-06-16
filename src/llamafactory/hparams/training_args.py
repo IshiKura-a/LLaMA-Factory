@@ -76,20 +76,6 @@ class RayArguments:
                 self.ray_storage_filesystem = fs.GcsFileSystem()
 
 
-
-class SerializableTimedelta(str):
-    def __new__(cls, *args, **kwargs):
-        # Create internal timedelta
-        td = timedelta(*args, **kwargs)
-        # Use its string representation to create a str object
-        return super().__new__(cls, str(td))
-
-    def __init__(self, *args, **kwargs):
-        self._td = timedelta(*args, **kwargs)
-
-    def to_timedelta(self):
-        return self._td
-
 @dataclass
 class TrainingArguments(RayArguments, Seq2SeqTrainingArguments):
     r"""
@@ -99,15 +85,3 @@ class TrainingArguments(RayArguments, Seq2SeqTrainingArguments):
         default=None,
         metadata={"help": "The timeout in seconds for the training. Default is None, which means no timeout."},
     )
-        
-    def __post_init__(self):
-        Seq2SeqTrainingArguments.__post_init__(self)
-        RayArguments.__post_init__(self)
-        
-        if self.timeout:
-            kwargs = InitProcessGroupKwargs(timeout=SerializableTimedelta(seconds=self.timeout))
-            if getattr(self.accelerator_config, 'kwargs_handlers', None):
-                setattr(self.accelerator_config, 'kwargs_handlers', 
-                        getattr(self.accelerator_config, 'kwargs_handlers') + [kwargs])
-            else:
-                setattr(self.accelerator_config, 'kwargs_handlers', [kwargs])
