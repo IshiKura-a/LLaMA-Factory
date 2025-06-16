@@ -18,6 +18,8 @@ from typing import Literal, Optional, Union
 
 from transformers import Seq2SeqTrainingArguments
 from transformers.training_args import _convert_str_dict
+from accelerate import InitProcessGroupKwargs
+from datetime import timedelta
 
 from ..extras.misc import use_ray
 
@@ -78,13 +80,18 @@ class TrainingArguments(RayArguments, Seq2SeqTrainingArguments):
     r"""
     Arguments pertaining to the trainer.
     """
-    disable_optimizer_check: Optional[bool] = field(
-        default=False,
-        metadata={
-            "help": "Whether or not disable deepspeed optimizer check to speed up training."
-        }
+    timeout: Optional[int] = field(
+        default=None,
+        metadata={"help": "The timeout in seconds for the training. Default is None, which means no timeout."},
     )
         
     def __post_init__(self):
         Seq2SeqTrainingArguments.__post_init__(self)
         RayArguments.__post_init__(self)
+        
+        if self.timeout:
+            kwargs = InitProcessGroupKwargs(timeout=timedelta(self.timeout))
+            if self.accelerator_config['kwargs_handlers']:
+                self.accelerator_config['kwargs_handlers'].append(kwargs)
+            else:
+                self.accelerator_config['kwargs_handlers'] = [kwargs]
