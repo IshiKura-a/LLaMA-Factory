@@ -77,19 +77,18 @@ class RayArguments:
 
 
 
-class SerializableTimedelta(dict):
-    def __init__(self, **kwargs):
-        self._td = timedelta(**kwargs)
-        super().__init__(seconds=self._td.total_seconds())
+class SerializableTimedelta(str):
+    def __new__(cls, *args, **kwargs):
+        # Create internal timedelta
+        td = timedelta(*args, **kwargs)
+        # Use its string representation to create a str object
+        return super().__new__(cls, str(td))
+
+    def __init__(self, *args, **kwargs):
+        self._td = timedelta(*args, **kwargs)
 
     def to_timedelta(self):
         return self._td
-
-    def __getattr__(self, name):
-        return getattr(self._td, name)
-
-    def __repr__(self):
-        return f"SerializableTimedelta(seconds={self._td.total_seconds()})"
 
 @dataclass
 class TrainingArguments(RayArguments, Seq2SeqTrainingArguments):
