@@ -7,7 +7,7 @@ stage: sft
 do_train: true
 do_predict: false
 finetuning_type: full
-deepspeed: examples/deepspeed/ds_z3_offload_gather_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json, ds_z3_offload_gather_config.json]
+deepspeed: examples/deepspeed/ds_z3_offload_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json, ds_z3_offload_gather_config.json]
 flash_attn: fa2
 
 ### dataset
@@ -19,7 +19,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /mnt/zh/qwen/qwen3_30BA3B_sft_qacv3_2ML_pre_ans_lr5e-5_e4_try2
+output_dir: /mnt/zh/qwen/qwen3_30BA3B_sft_qacv3_2ML_pre_ans_lr5e-5_e4
 logging_steps: 1
 save_strategy: epoch
 plot_loss: true
