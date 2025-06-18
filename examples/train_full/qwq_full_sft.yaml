@@ -11,7 +11,7 @@ deepspeed: examples/deepspeed/ds_z3_offload_gather_config.json  # choices: [ds_z
 flash_attn: fa2
 
 ### dataset
-dataset: qacv3.1_filter_train
+dataset: qacv3.1_filter_no_German_train
 eval_dataset: qac_250302_test
 template: qwen3
 cutoff_len: 4096

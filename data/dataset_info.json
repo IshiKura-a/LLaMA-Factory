@@ -7,6 +7,13 @@
       "response": "answer"
     }
   },
+  "qacv3.1_filter_no_German_train": {
+    "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v3.1_filter_no_German.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "resp"
+    }
+  },
   "qacv3.1_filter_train": {
     "file_name": "/mnt/zh/dataset/ads_sft/qac_human_label_dev_v3.1_filter.jsonl",
     "columns": {
