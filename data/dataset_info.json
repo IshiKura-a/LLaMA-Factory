@@ -84,6 +84,13 @@
       "response": "match"
     }
   },
+  "ep_hard_v2_exp": {
+    "file_name": "/data/local/User/zihao/datasets/entity_prediction/ep_train_hard_7kquery_exp.jsonl",
+    "columns": {
+      "prompt": "prompt",
+      "response": "resp"
+    }
+  },
   "qac_L3manageQ5_sample1w_qwqRejS": {
     "file_name": "/data/local/User/zihao/datasets/qac/qac_L3manageQ5_sample1w_qwq.jsonl",
     "columns": {
