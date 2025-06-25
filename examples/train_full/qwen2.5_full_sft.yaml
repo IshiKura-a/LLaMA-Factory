@@ -17,7 +17,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /data/local/User/zihao/entity_prediction/outputs/qwen2.5_0.5B_hardv2_exp_lr5e-5_e2_bsz16
+output_dir: /data/local/User/zihao/entity_prediction/outputs/qwen_hardv2_exp_lr5e-5_e2
 logging_steps: 1
 save_strategy: epoch
 plot_loss: true
